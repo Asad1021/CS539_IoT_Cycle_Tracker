@@ -1,0 +1,14 @@
+[
+  {
+    "macAddress": "14:2B:2F:C0:2F:58",
+    "latitude": 30.9691,
+    "longitude": 76.4673,
+    "timestamp": "2025-05-13T10:00:00Z"
+  },
+  {
+    "macAddress": "00:11:22:33:44:55",
+    "latitude": 30.9691,
+    "longitude": 76.5375,
+    "timestamp": "2025-05-13T10:00:00Z"
+  }
+]
