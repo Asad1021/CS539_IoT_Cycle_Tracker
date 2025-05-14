@@ -136,9 +136,9 @@
 //   showMapForMac(e.target.value);
 // });
 // Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   console.log('DOM loaded - initializing app');
-  
+
   // Set up event listeners for buttons
   document.getElementById('start-app-btn').addEventListener('click', () => {
     document.getElementById('login-card').classList.add('d-none');
@@ -167,11 +167,11 @@ async function fetchData() {
   try {
     console.log('Fetching data...');
     const response = await fetch('/api/data');
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     console.log('Data received:', data);
 
@@ -186,16 +186,16 @@ async function fetchData() {
     data.forEach(entry => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${entry.macAddress || 'N/A'}</td>
-        <td>${entry.latitude ? entry.latitude.toFixed(6) : 'N/A'}</td>
-        <td>${entry.longitude ? entry.longitude.toFixed(6) : 'N/A'}</td>
-        <td>${entry.timestamp ? new Date(entry.timestamp).toLocaleString() : 'N/A'}</td>
-      `;
+    <td>${entry.macAddress || 'N/A'}</td>
+    <td>${entry.latitude ? entry.latitude.toFixed(6) : 'N/A'}</td>
+    <td>${entry.longitude ? entry.longitude.toFixed(6) : 'N/A'}</td>
+    <td>${entry.seq_num || 'N/A'}</td>
+  `;
       tableBody.appendChild(row);
     });
   } catch (err) {
     console.error('Error fetching data:', err);
-    document.getElementById('table-body').innerHTML = 
+    document.getElementById('table-body').innerHTML =
       '<tr><td colspan="4" class="text-center">Error loading data: ' + err.message + '</td></tr>';
   }
 }
@@ -205,11 +205,11 @@ async function loadUniqueMacs() {
   try {
     console.log('Loading MAC addresses...');
     const response = await fetch('/api/data');
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     console.log('Data for MACs:', data);
 
@@ -243,17 +243,18 @@ async function loadUniqueMacs() {
 async function showMapForMac(mac) {
   try {
     const response = await fetch('/api/data');
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
+
     const data = await response.json();
 
     const entries = data.filter(item => item.macAddress === mac);
     if (!entries.length) return;
 
-    const latest = entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+    // const latest = entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+    const latest = entries.sort((a, b) => b.seq_num - a.seq_num)[0];
     const lat = latest.latitude;
     const lng = latest.longitude;
 
