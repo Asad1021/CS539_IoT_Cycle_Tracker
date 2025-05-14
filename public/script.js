@@ -239,6 +239,34 @@ async function loadUniqueMacs() {
   }
 }
 
+// Function to fetch and update table data
+function updateTable() {
+  fetch('/api/data')
+    .then(response => response.json())
+    .then(data => {
+      const tableBody = document.getElementById('table-body');
+      tableBody.innerHTML = ''; // Clear existing rows
+      
+      data.forEach(entry => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${entry.macAddress || 'N/A'}</td>
+          <td>${entry.latitude ? entry.latitude.toFixed(6) : 'N/A'}</td>
+          <td>${entry.longitude ? entry.longitude.toFixed(6) : 'N/A'}</td>
+          <td>${entry.seq_num || 'N/A'}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+}
+
+// Initial load
+updateTable();
+
+// Auto-refresh every 10 seconds
+setInterval(updateTable, 10000);
+
 // Show map for selected MAC
 async function showMapForMac(mac) {
   try {
